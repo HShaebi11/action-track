@@ -111,18 +111,18 @@ class FirebaseAuth {
       signupForm.style.display = 'block';
     }
 
-    authModal.style.display = 'block';
+    authModal.classList.add('active');
     setTimeout(() => {
       const firstInput = mode === 'login' ?
         document.getElementById('login-email') :
         document.getElementById('signup-name');
       firstInput?.focus();
-    }, 100);
+    }, 400);
   }
 
   hideAuthModal() {
     const authModal = document.getElementById('auth-modal');
-    authModal.style.display = 'none';
+    authModal.classList.remove('active');
     this.clearForms();
   }
 
@@ -297,8 +297,8 @@ class FirebaseAuth {
     if (userName && this.currentUser) userName.textContent = `Welcome, ${this.currentUser.name}`;
 
     // Initialize or reload user-specific data
-    if (window.subscriptionApp && this.currentUser) {
-      window.subscriptionApp.loadUserData(this.currentUser.id);
+    if (window.actionTrackApp && this.currentUser) {
+      window.actionTrackApp.handleAuthStateChange(this.currentUser);
     }
   }
 
