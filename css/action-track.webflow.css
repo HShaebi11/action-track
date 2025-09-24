@@ -282,8 +282,8 @@
 .inputs-wrapper {
   grid-column-gap: 30px;
   grid-row-gap: 30px;
-  flex: 0 auto;
-  justify-content: flex-start;
+  flex: 1;
+  justify-content: space-between;
   align-self: flex-start;
   align-items: center;
   display: flex;
@@ -413,14 +413,10 @@
   border-radius: 10px;
   flex-flow: column;
   flex: 0 auto;
-  grid-template-rows: auto auto;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-auto-columns: 1fr;
   place-content: center;
   align-self: center;
   align-items: flex-end;
   width: 100%;
-  margin-top: 15px;
   padding: 15px;
   display: none;
 }
@@ -839,13 +835,11 @@
   border-bottom-style: solid;
   flex-flow: column;
   flex: none;
-  grid-template-rows: auto minmax(auto, 1fr);
-  grid-template-columns: 1fr 1fr;
-  grid-auto-columns: 1fr;
   justify-content: flex-start;
-  place-items: start stretch;
+  align-items: stretch;
   padding-bottom: 15px;
-  display: grid;
+  display: flex;
+  gap: 15px;
 }
 
 .table_instance {
@@ -889,7 +883,7 @@
 /* Mobile Styles */
 @media screen and (max-width: 767px) {
   .fullscreen-wrapper {
-    padding: 15px;
+    padding: 15px 0;
     height: auto;
     min-height: 100vh;
   }
@@ -902,15 +896,28 @@
     justify-content: flex-start;
     align-items: flex-end;
     height: auto;
+    padding: 0 15px;
   }
 
   .wrapper.header {
     grid-column-gap: 10px;
     grid-row-gap: 10px;
-    grid-template-rows: auto auto;
-    grid-template-columns: 1fr auto;
-    grid-auto-columns: 1fr;
-    display: grid;
+    flex-direction: column;
+    display: flex;
+    padding: 0 15px;
+  }
+
+  .wrapper.header img {
+    align-self: flex-start;
+  }
+
+  .wrapper.header .tag {
+    align-self: flex-start;
+  }
+
+  .wrapper.header .contexual-text {
+    align-self: flex-start;
+    text-align: left;
   }
 
   .contexual-text.right-aligned {
@@ -918,6 +925,7 @@
     justify-content: flex-start;
     align-items: center;
     font-size: 14px;
+    align-self: flex-start;
   }
 
   .contexual-text {
@@ -932,23 +940,25 @@
     line-height: .6em;
   }
 
+  .control {
+    padding: 0 15px 15px 15px;
+  }
+
+  .inputs-wrapper {
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .input-wrapper {
+    flex: 1;
+  }
+
   .inputs {
     flex-flow: column;
     justify-content: flex-start;
     align-items: flex-start;
-    display: flex;
-    padding: 10px;
-  }
-
-  .control {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .inputs-wrapper {
-    flex-wrap: wrap;
-    gap: 15px;
+    display: none;
   }
 
   .input-wrapper.two {
@@ -962,11 +972,19 @@
     gap: 15px;
   }
 
+  .input {
+    min-height: 44px;
+    padding: 12px 15px;
+    font-size: 16px;
+    width: 100%;
+  }
+
   /* Enhanced button sizes for touch */
   .button-01 {
     min-height: 44px;
     padding: 12px 20px;
     font-size: 16px;
+    flex: 0 0 auto;
   }
 
   .option {
@@ -975,15 +993,12 @@
     font-size: 14px;
   }
 
-  .input {
-    min-height: 44px;
-    padding: 12px 15px;
-    font-size: 16px;
-  }
-
-  /* Table responsive */
+  /* Table responsive - full width */
   .table_instance {
     overflow-x: auto;
+    margin: 0 -15px;
+    width: 100vw;
+    padding: 0 15px;
   }
 
   .table_table {
@@ -1007,6 +1022,13 @@
     min-height: 44px;
     font-size: 16px;
     padding: 12px 15px;
+  }
+
+  /* Total wrapper full width */
+  .total-wrapper {
+    margin: 0 -15px;
+    width: 100vw;
+    padding: 0 15px;
   }
 }
 
@@ -1063,15 +1085,7 @@
   }
 }
 
-#add.w-node-f934eea7-5a62-51db-fc2f-02d7843b6c18-1d70d409 {
-  grid-area: span 1 / span 1 / span 1 / span 1;
-  place-self: auto end;
-}
-
-#input.w-node-_5b04d197-c9c7-6116-668c-15723e5dfe25-1d70d409 {
-  grid-area: 2 / 2 / 3 / 3;
-  justify-self: center;
-}
+/* Remove Webflow grid positioning for mobile compatibility */
 
 @media screen and (max-width: 479px) {
   #w-node-e1a17743-3cff-4d3c-0f4e-b92b1eef7110-1d70d409 {
