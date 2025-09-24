@@ -1,92 +1,123 @@
-document.addEventListener("DOMContentLoaded", function() {
-  // Storage for subscriptions
-  let subscriptions = JSON.parse(localStorage.getItem('subscriptions')) || [];
-  let monthlyIncome = parseFloat(localStorage.getItem('monthlyIncome')) || 0;
+// Subscription Management System
+class SubscriptionApp {
+  constructor() {
+    this.subscriptions = [];
+    this.monthlyIncome = 0;
+    this.currentUser = null;
+    this.selectedFrequency = "monthly";
+    this.selectedPriority = "medium";
 
-  // Elements
-  const addBtn = document.getElementById("add");
-  const inputs = document.getElementById("input");
-  const monthlyInput = document.getElementById("monthly-input");
-  const nameInput = document.getElementById("name");
-  const amountInput = document.getElementById("amount");
-  const noteInput = document.getElementById("note");
-  const dateInput = document.getElementById("date");
-  const tableBody = document.querySelector(".table_body");
-  const totalElement = document.getElementById("total");
-  const remainingPercentElement = document.getElementById("remaining-percent");
-  const remainingNumberElement = document.getElementById("remaining-number");
-  const nameActiveElement = document.getElementById("name-active");
-  const addFormBtn = document.querySelector("#input .button-01");
+    this.initializeElements();
+    this.bindEvents();
 
-  let selectedFrequency = "monthly";
-  let selectedPriority = "medium";
-
-  // Initialize
-  loadMonthlyIncome();
-  loadSubscriptions();
-  updateCalculations();
-  setDefaultSelections();
-
-  // Toggle input form
-  if (addBtn && inputs) {
-    addBtn.addEventListener("click", function() {
-      if (inputs.style.display === "none" || inputs.style.display === "") {
-        inputs.style.display = "flex";
-        clearForm();
-      } else {
-        inputs.style.display = "none";
+    // Wait for auth system to initialize
+    setTimeout(() => {
+      const user = window.authSystem?.getCurrentUser();
+      if (user) {
+        this.loadUserData(user.id);
       }
-    });
+    }, 100);
   }
 
-  // Monthly income handler
-  if (monthlyInput) {
-    monthlyInput.addEventListener("change", function() {
-      monthlyIncome = parseFloat(this.value) || 0;
-      localStorage.setItem('monthlyIncome', monthlyIncome.toString());
-      updateCalculations();
-    });
+  initializeElements() {
+    // Elements
+    this.addBtn = document.getElementById("add");
+    this.inputs = document.getElementById("input");
+    this.monthlyInput = document.getElementById("monthly-input");
+    this.nameInput = document.getElementById("name");
+    this.amountInput = document.getElementById("amount");
+    this.noteInput = document.getElementById("note");
+    this.dateInput = document.getElementById("date");
+    this.tableBody = document.querySelector(".table_body");
+    this.totalElement = document.getElementById("total");
+    this.remainingPercentElement = document.getElementById("remaining-percent");
+    this.remainingNumberElement = document.getElementById("remaining-number");
+    this.nameActiveElement = document.getElementById("name-active");
+    this.addFormBtn = document.querySelector("#input .button-01");
   }
 
-  // Frequency option handlers
-  const frequencyOptions = document.querySelectorAll("#frequency-options .option");
-  frequencyOptions.forEach(option => {
-    option.addEventListener("click", function() {
-      frequencyOptions.forEach(opt => opt.classList.remove("selected"));
-      this.classList.add("selected");
-      selectedFrequency = this.querySelector(".button-option").textContent.toLowerCase();
-    });
-  });
+  bindEvents() {
+    // Toggle input form
+    if (this.addBtn && this.inputs) {
+      this.addBtn.addEventListener("click", () => {
+        if (this.inputs.style.display === "none" || this.inputs.style.display === "") {
+          this.inputs.style.display = "flex";
+          this.clearForm();
+        } else {
+          this.inputs.style.display = "none";
+        }
+      });
+    }
 
-  // Priority option handlers
-  const priorityOptions = document.querySelectorAll("#priority-options .option");
-  priorityOptions.forEach(option => {
-    option.addEventListener("click", function() {
-      priorityOptions.forEach(opt => opt.classList.remove("selected"));
-      this.classList.add("selected");
-      selectedPriority = this.querySelector(".button-option").textContent.toLowerCase();
-    });
-  });
+    // Monthly income handler
+    if (this.monthlyInput) {
+      this.monthlyInput.addEventListener("change", () => {
+        this.monthlyIncome = parseFloat(this.monthlyInput.value) || 0;
+        this.saveUserData();
+        this.updateCalculations();
+      });
+    }
 
-  // Form submission
-  if (addFormBtn) {
-    addFormBtn.addEventListener("click", function() {
-      addSubscription();
+    // Frequency option handlers
+    const frequencyOptions = document.querySelectorAll("#frequency-options .option");
+    frequencyOptions.forEach(option => {
+      option.addEventListener("click", () => {
+        frequencyOptions.forEach(opt => opt.classList.remove("selected"));
+        option.classList.add("selected");
+        this.selectedFrequency = option.querySelector(".button-option").textContent.toLowerCase();
+      });
     });
+
+    // Priority option handlers
+    const priorityOptions = document.querySelectorAll("#priority-options .option");
+    priorityOptions.forEach(option => {
+      option.addEventListener("click", () => {
+        priorityOptions.forEach(opt => opt.classList.remove("selected"));
+        option.classList.add("selected");
+        this.selectedPriority = option.querySelector(".button-option").textContent.toLowerCase();
+      });
+    });
+
+    // Form submission
+    if (this.addFormBtn) {
+      this.addFormBtn.addEventListener("click", () => {
+        this.addSubscription();
+      });
+    }
+
+    // Name input handler for preview
+    if (this.nameInput && this.nameActiveElement) {
+      this.nameInput.addEventListener("input", () => {
+        this.nameActiveElement.textContent = this.nameInput.value || "[name]";
+      });
+    }
   }
 
-  // Name input handler for preview
-  if (nameInput && nameActiveElement) {
-    nameInput.addEventListener("input", function() {
-      nameActiveElement.textContent = this.value || "[name]";
-    });
+  loadUserData(userId) {
+    this.currentUser = userId;
+
+    // Load user-specific data
+    this.subscriptions = window.authSystem?.getUserData('subscriptions') || [];
+    this.monthlyIncome = parseFloat(window.authSystem?.getUserData('monthlyIncome')) || 0;
+
+    this.loadMonthlyIncome();
+    this.loadSubscriptions();
+    this.updateCalculations();
+    this.setDefaultSelections();
   }
 
-  function addSubscription() {
-    const name = nameInput.value.trim();
-    const amount = parseFloat(amountInput.value) || 0;
-    const note = noteInput.value.trim();
-    const date = dateInput.value;
+  saveUserData() {
+    if (!this.currentUser) return;
+
+    window.authSystem?.setUserData('subscriptions', this.subscriptions);
+    window.authSystem?.setUserData('monthlyIncome', this.monthlyIncome);
+  }
+
+  addSubscription() {
+    const name = this.nameInput.value.trim();
+    const amount = parseFloat(this.amountInput.value) || 0;
+    const note = this.noteInput.value.trim();
+    const date = this.dateInput.value;
 
     if (!name || amount <= 0) {
       alert("Please enter a valid name and amount");
@@ -99,27 +130,27 @@ document.addEventListener("DOMContentLoaded", function() {
       amount,
       note,
       date,
-      frequency: selectedFrequency,
-      priority: selectedPriority
+      frequency: this.selectedFrequency,
+      priority: this.selectedPriority
     };
 
-    subscriptions.push(subscription);
-    localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+    this.subscriptions.push(subscription);
+    this.saveUserData();
 
-    loadSubscriptions();
-    updateCalculations();
-    clearForm();
-    inputs.style.display = "none";
+    this.loadSubscriptions();
+    this.updateCalculations();
+    this.clearForm();
+    this.inputs.style.display = "none";
   }
 
-  function removeSubscription(id) {
-    subscriptions = subscriptions.filter(sub => sub.id !== id);
-    localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-    loadSubscriptions();
-    updateCalculations();
+  removeSubscription(id) {
+    this.subscriptions = this.subscriptions.filter(sub => sub.id !== id);
+    this.saveUserData();
+    this.loadSubscriptions();
+    this.updateCalculations();
   }
 
-  function setDefaultSelections() {
+  setDefaultSelections() {
     // Set default frequency to monthly
     const frequencyOptions = document.querySelectorAll("#frequency-options .option");
     frequencyOptions.forEach(opt => opt.classList.remove("selected"));
@@ -141,32 +172,32 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  function clearForm() {
-    nameInput.value = "";
-    amountInput.value = "";
-    noteInput.value = "";
-    dateInput.value = "";
-    nameActiveElement.textContent = "[name]";
+  clearForm() {
+    this.nameInput.value = "";
+    this.amountInput.value = "";
+    this.noteInput.value = "";
+    this.dateInput.value = "";
+    this.nameActiveElement.textContent = "[name]";
 
     // Reset to defaults
-    selectedFrequency = "monthly";
-    selectedPriority = "medium";
-    setDefaultSelections();
+    this.selectedFrequency = "monthly";
+    this.selectedPriority = "medium";
+    this.setDefaultSelections();
   }
 
-  function loadMonthlyIncome() {
-    if (monthlyInput) {
-      monthlyInput.value = monthlyIncome.toFixed(2);
+  loadMonthlyIncome() {
+    if (this.monthlyInput) {
+      this.monthlyInput.value = this.monthlyIncome.toFixed(2);
     }
   }
 
-  function loadSubscriptions() {
-    if (!tableBody) return;
+  loadSubscriptions() {
+    if (!this.tableBody) return;
 
     // Clear existing rows (keep header)
-    tableBody.innerHTML = "";
+    this.tableBody.innerHTML = "";
 
-    subscriptions.forEach(subscription => {
+    this.subscriptions.forEach(subscription => {
       const row = document.createElement("tr");
       row.className = "table_row";
       row.innerHTML = `
@@ -176,14 +207,14 @@ document.addEventListener("DOMContentLoaded", function() {
         <td class="table_cell">${subscription.note || "-"}</td>
         <td class="table_cell">${subscription.priority}</td>
         <td class="table_cell">${subscription.date || "-"}</td>
-        <td class="table_cell" style="cursor: pointer; color: #ff4444;" onclick="removeSubscription(${subscription.id})">X</td>
+        <td class="table_cell" style="cursor: pointer; color: #ff4444;" onclick="window.subscriptionApp.removeSubscription(${subscription.id})">X</td>
       `;
-      tableBody.appendChild(row);
+      this.tableBody.appendChild(row);
     });
   }
 
-  function updateCalculations() {
-    const total = subscriptions.reduce((sum, sub) => {
+  updateCalculations() {
+    const total = this.subscriptions.reduce((sum, sub) => {
       let monthlyAmount = sub.amount;
 
       switch(sub.frequency) {
@@ -201,22 +232,24 @@ document.addEventListener("DOMContentLoaded", function() {
       return sum + monthlyAmount;
     }, 0);
 
-    const remaining = monthlyIncome - total;
-    const remainingPercent = monthlyIncome > 0 ? (remaining / monthlyIncome) * 100 : 0;
+    const remaining = this.monthlyIncome - total;
+    const remainingPercent = this.monthlyIncome > 0 ? (remaining / this.monthlyIncome) * 100 : 0;
 
-    if (totalElement) {
-      totalElement.textContent = `£${total.toFixed(2)}`;
+    if (this.totalElement) {
+      this.totalElement.textContent = `£${total.toFixed(2)}`;
     }
 
-    if (remainingNumberElement) {
-      remainingNumberElement.textContent = `£${remaining.toFixed(2)}`;
+    if (this.remainingNumberElement) {
+      this.remainingNumberElement.textContent = `£${remaining.toFixed(2)}`;
     }
 
-    if (remainingPercentElement) {
-      remainingPercentElement.textContent = `${remainingPercent.toFixed(1)}%`;
+    if (this.remainingPercentElement) {
+      this.remainingPercentElement.textContent = `${remainingPercent.toFixed(1)}%`;
     }
   }
+}
 
-  // Make removeSubscription globally accessible
-  window.removeSubscription = removeSubscription;
+// Initialize the subscription app
+document.addEventListener("DOMContentLoaded", function() {
+  window.subscriptionApp = new SubscriptionApp();
 });
