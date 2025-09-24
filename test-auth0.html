@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Auth0</title>
+</head>
+<body>
+    <h2>Auth0 Test Page</h2>
+    <button id="login">Login with Auth0</button>
+    <button id="logout">Logout</button>
+    <div id="profile"></div>
+
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+    <script>
+        let auth0Client;
+
+        async function initAuth0() {
+            try {
+                auth0Client = await auth0.createAuth0Client({
+                    domain: 'dev-0zwsc562k38xp18u.us.auth0.com',
+                    clientId: 'PRnLJc8MlOKb6fDHWHZlyzsPZcwp7GNR',
+                    authorizationParams: {
+                        redirect_uri: window.location.origin + '/test-auth0.html'
+                    }
+                });
+
+                console.log('Auth0 initialized successfully');
+
+                // Check if returning from Auth0
+                const query = window.location.search;
+                if (query.includes('code=') || query.includes('error=')) {
+                    await auth0Client.handleRedirectCallback();
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+
+                // Check if user is authenticated
+                const isAuthenticated = await auth0Client.isAuthenticated();
+                if (isAuthenticated) {
+                    const user = await auth0Client.getUser();
+                    document.getElementById('profile').innerHTML = `
+                        <h3>Logged in as: ${user.name || user.email}</h3>
+                        <p>Email: ${user.email}</p>
+                        <p>User ID: ${user.sub}</p>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('Auth0 initialization failed:', error);
+                document.getElementById('profile').innerHTML = `<p style="color: red;">Auth0 Error: ${error.message}</p>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initAuth0();
+
+            document.getElementById('login').addEventListener('click', async function() {
+                try {
+                    await auth0Client.loginWithRedirect();
+                } catch (error) {
+                    console.error('Login failed:', error);
+                }
+            });
+
+            document.getElementById('logout').addEventListener('click', async function() {
+                try {
+                    await auth0Client.logout({
+                        logoutParams: {
+                            returnTo: window.location.origin + '/test-auth0.html'
+                        }
+                    });
+                } catch (error) {
+                    console.error('Logout failed:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
