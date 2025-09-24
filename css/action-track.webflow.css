@@ -761,6 +761,12 @@
 }
 
 .button-01 {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   pointer-events: auto;
   color: #fff;
   cursor: pointer;
@@ -771,6 +777,11 @@
   align-items: center;
   padding: 7px 15px;
   display: flex;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1;
+  text-decoration: none;
+  vertical-align: top;
 }
 
 .control {
