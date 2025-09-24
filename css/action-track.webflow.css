@@ -683,6 +683,67 @@
   }
 }
 
+/* Mobile-First Enhancements */
+.mobile-scroll-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Improved touch targets */
+.touch-friendly {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Mobile-optimized form styles */
+@media screen and (max-width: 767px) {
+  /* Prevent zoom on iOS when focusing inputs */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="date"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Stack form elements vertically on mobile */
+  .input-wrapper.v2 {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Full width options on mobile */
+  .input-wrapper.v2 .option {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Improve spacing for mobile forms */
+  .auth-form {
+    padding: 15px;
+    gap: 20px;
+  }
+
+  /* Better mobile header layout */
+  .header-wrapper {
+    gap: 30px;
+    padding-bottom: 10px;
+  }
+
+  /* Optimize total wrapper for mobile */
+  .total-wrapper {
+    gap: 30px;
+    margin-top: 20px;
+  }
+
+  .wrapper.heading.bottom {
+    height: auto;
+    padding: 15px 0;
+  }
+}
+
 .radio-button-2 {
   display: block;
 }
@@ -825,25 +886,29 @@
   width: 100%;
 }
 
-@media screen and (max-width: 479px) {
+/* Mobile Styles */
+@media screen and (max-width: 767px) {
   .fullscreen-wrapper {
-    padding: 10px;
+    padding: 15px;
+    height: auto;
+    min-height: 100vh;
   }
 
   .wrapper.heading {
-    grid-column-gap: 30px;
-    grid-row-gap: 30px;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
     text-align: center;
     flex-flow: column;
     justify-content: flex-start;
     align-items: flex-end;
+    height: auto;
   }
 
   .wrapper.header {
-    grid-column-gap: 15px;
-    grid-row-gap: 15px;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
     grid-template-rows: auto auto;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr auto;
     grid-auto-columns: 1fr;
     display: grid;
   }
@@ -852,13 +917,19 @@
     text-align: left;
     justify-content: flex-start;
     align-items: center;
+    font-size: 14px;
+  }
+
+  .contexual-text {
+    font-size: 14px;
   }
 
   .heading01 {
-    text-align: left;
+    text-align: center;
     justify-content: center;
     align-items: center;
-    font-size: 80px;
+    font-size: 60px;
+    line-height: .6em;
   }
 
   .inputs {
@@ -866,6 +937,129 @@
     justify-content: flex-start;
     align-items: flex-start;
     display: flex;
+    padding: 10px;
+  }
+
+  .control {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .inputs-wrapper {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .input-wrapper.two {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .two-inputs-wrapper {
+    flex-direction: column;
+    height: auto;
+    gap: 15px;
+  }
+
+  /* Enhanced button sizes for touch */
+  .button-01 {
+    min-height: 44px;
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+
+  .option {
+    min-height: 44px;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .input {
+    min-height: 44px;
+    padding: 12px 15px;
+    font-size: 16px;
+  }
+
+  /* Table responsive */
+  .table_instance {
+    overflow-x: auto;
+  }
+
+  .table_table {
+    min-width: 600px;
+  }
+
+  .table_cell, .table_header {
+    padding: 12px 8px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* Modal improvements */
+  .auth-modal-content {
+    margin: 2% auto;
+    width: 95%;
+    max-width: none;
+  }
+
+  .auth-form .input {
+    min-height: 44px;
+    font-size: 16px;
+    padding: 12px 15px;
+  }
+}
+
+/* Tablet Styles */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .fullscreen-wrapper {
+    padding: 20px;
+  }
+
+  .heading01 {
+    font-size: 120px;
+  }
+
+  .contexual-text {
+    font-size: 15px;
+  }
+
+  .input-wrapper.two {
+    flex-basis: 48%;
+  }
+
+  .button-01 {
+    min-height: 40px;
+    padding: 10px 18px;
+  }
+
+  .option {
+    min-height: 40px;
+    padding: 10px 18px;
+  }
+}
+
+/* Small Mobile (below 480px) */
+@media screen and (max-width: 479px) {
+  .fullscreen-wrapper {
+    padding: 10px;
+  }
+
+  .heading01 {
+    font-size: 48px;
+  }
+
+  .contexual-text {
+    font-size: 12px;
+  }
+
+  .input {
+    font-size: 14px;
+  }
+
+  .button-01, .option {
+    font-size: 14px;
+    min-height: 44px;
   }
 }
 
