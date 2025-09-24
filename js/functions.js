@@ -37,14 +37,43 @@ class SubscriptionApp {
   }
 
   bindEvents() {
-    // Toggle input form
+    // Toggle input form with animation
     if (this.addBtn && this.inputs) {
       this.addBtn.addEventListener("click", () => {
-        if (this.inputs.style.display === "none" || this.inputs.style.display === "") {
+        const isHidden = this.inputs.style.display === "none" || this.inputs.style.display === "";
+
+        if (isHidden) {
+          // Show form with animation
           this.inputs.style.display = "flex";
           this.clearForm();
+
+          if (window.gsap) {
+            gsap.fromTo(this.inputs,
+              { opacity: 0, y: -20 },
+              { duration: 0.4, opacity: 1, y: 0, ease: "back.out(1.7)" }
+            );
+          }
+
+          // Focus first input
+          setTimeout(() => {
+            this.nameInput?.focus();
+          }, 400);
         } else {
-          this.inputs.style.display = "none";
+          // Hide form with animation
+          if (window.gsap) {
+            gsap.to(this.inputs, {
+              duration: 0.3,
+              opacity: 0,
+              y: -20,
+              ease: "power2.out",
+              onComplete: () => {
+                this.inputs.style.display = "none";
+                gsap.set(this.inputs, { opacity: 1, y: 0 });
+              }
+            });
+          } else {
+            this.inputs.style.display = "none";
+          }
         }
       });
     }
@@ -190,23 +219,60 @@ class SubscriptionApp {
 
   showError(message) {
     const errorDiv = document.createElement('div');
-    errorDiv.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: #f44336;
-      color: white;
-      padding: 15px 20px;
-      border-radius: 5px;
-      font-family: Ppneuemontrealmono, Arial, sans-serif;
-      font-size: 12px;
-      z-index: 1001;
-      animation: slideInRight 0.3s ease;
-    `;
+    errorDiv.className = 'status-indicator error';
     errorDiv.textContent = message;
 
     document.body.appendChild(errorDiv);
-    setTimeout(() => errorDiv.remove(), 4000);
+
+    // Animate in
+    if (window.gsap) {
+      gsap.fromTo(errorDiv,
+        { opacity: 0, x: 100 },
+        { duration: 0.4, opacity: 1, x: 0, ease: "back.out(1.7)" }
+      );
+
+      // Animate out
+      setTimeout(() => {
+        gsap.to(errorDiv, {
+          duration: 0.3,
+          opacity: 0,
+          x: 100,
+          ease: "power2.out",
+          onComplete: () => errorDiv.remove()
+        });
+      }, 4000);
+    } else {
+      setTimeout(() => errorDiv.remove(), 4000);
+    }
+  }
+
+  showSuccess(message) {
+    const successDiv = document.createElement('div');
+    successDiv.className = 'status-indicator success';
+    successDiv.textContent = message;
+
+    document.body.appendChild(successDiv);
+
+    // Animate in
+    if (window.gsap) {
+      gsap.fromTo(successDiv,
+        { opacity: 0, x: 100 },
+        { duration: 0.4, opacity: 1, x: 0, ease: "back.out(1.7)" }
+      );
+
+      // Animate out
+      setTimeout(() => {
+        gsap.to(successDiv, {
+          duration: 0.3,
+          opacity: 0,
+          x: 100,
+          ease: "power2.out",
+          onComplete: () => successDiv.remove()
+        });
+      }, 3000);
+    } else {
+      setTimeout(() => successDiv.remove(), 3000);
+    }
   }
 
   addSubscription() {
@@ -216,8 +282,14 @@ class SubscriptionApp {
     const date = this.dateInput.value;
 
     if (!name || amount <= 0) {
-      alert("Please enter a valid name and amount");
+      this.showError("Please enter a valid name and amount");
       return;
+    }
+
+    // Show loading state
+    const submitButton = document.querySelector('#input .button-01');
+    if (window.uxEnhancements && submitButton) {
+      window.uxEnhancements.showButtonLoading(submitButton);
     }
 
     const subscription = {
@@ -233,10 +305,36 @@ class SubscriptionApp {
     this.subscriptions.push(subscription);
     this.saveUserData();
 
-    this.loadSubscriptions();
-    this.updateCalculations();
-    this.clearForm();
-    this.inputs.style.display = "none";
+    // Add delay for better UX feedback
+    setTimeout(() => {
+      this.loadSubscriptions();
+      this.updateCalculations();
+      this.clearForm();
+
+      // Animate form closing
+      if (window.gsap) {
+        gsap.to(this.inputs, {
+          duration: 0.3,
+          opacity: 0,
+          y: -20,
+          ease: "power2.out",
+          onComplete: () => {
+            this.inputs.style.display = "none";
+            gsap.set(this.inputs, { opacity: 1, y: 0 });
+          }
+        });
+      } else {
+        this.inputs.style.display = "none";
+      }
+
+      // Hide loading state
+      if (window.uxEnhancements && submitButton) {
+        window.uxEnhancements.hideButtonLoading(submitButton);
+      }
+
+      // Show success message
+      this.showSuccess(`${name} subscription added successfully!`);
+    }, 800);
   }
 
   removeSubscription(id) {
@@ -244,6 +342,16 @@ class SubscriptionApp {
     this.saveUserData();
     this.loadSubscriptions();
     this.updateCalculations();
+  }
+
+  removeSubscriptionWithAnimation(id, rowElement) {
+    if (window.uxEnhancements && window.uxEnhancements.isInitialized) {
+      window.uxEnhancements.animateRowRemoval(rowElement, () => {
+        this.removeSubscription(id);
+      });
+    } else {
+      this.removeSubscription(id);
+    }
   }
 
   setDefaultSelections() {
@@ -293,7 +401,7 @@ class SubscriptionApp {
     // Clear existing rows (keep header)
     this.tableBody.innerHTML = "";
 
-    this.subscriptions.forEach(subscription => {
+    this.subscriptions.forEach((subscription, index) => {
       const row = document.createElement("tr");
       row.className = "table_row";
       row.innerHTML = `
@@ -303,10 +411,24 @@ class SubscriptionApp {
         <td class="table_cell">${subscription.note || "-"}</td>
         <td class="table_cell">${subscription.priority}</td>
         <td class="table_cell">${subscription.date || "-"}</td>
-        <td class="table_cell" style="cursor: pointer; color: #ff4444;" onclick="window.subscriptionApp.removeSubscription(${subscription.id})">X</td>
+        <td class="table_cell" style="cursor: pointer; color: #ff4444;" onclick="window.subscriptionApp.removeSubscriptionWithAnimation(${subscription.id}, this.parentElement)">×</td>
       `;
       this.tableBody.appendChild(row);
+
+      // Animate new row if UX enhancements are available
+      if (window.uxEnhancements && window.uxEnhancements.isInitialized) {
+        setTimeout(() => {
+          window.uxEnhancements.animateNewRow(row);
+        }, index * 100);
+      }
     });
+
+    // Refresh UX enhancements for new elements
+    if (window.uxEnhancements) {
+      setTimeout(() => {
+        window.uxEnhancements.refreshAnimations();
+      }, this.subscriptions.length * 100 + 200);
+    }
   }
 
   updateCalculations() {
