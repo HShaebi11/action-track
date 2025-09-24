@@ -312,7 +312,18 @@ class FirebaseAuth {
     const loginPrompt = document.getElementById('login-prompt');
 
     if (userInfo) userInfo.style.display = 'none';
-    if (loginPrompt) loginPrompt.style.display = 'block';
+    if (loginPrompt) {
+      loginPrompt.style.display = 'block';
+      // Ensure visibility with animation
+      if (window.gsap) {
+        gsap.fromTo(loginPrompt,
+          { opacity: 0, y: -10 },
+          { duration: 0.3, opacity: 1, y: 0, ease: "power2.out" }
+        );
+      }
+    }
+
+    console.log('Showing login prompt - user not authenticated');
   }
 
   // Utility functions
@@ -438,7 +449,16 @@ document.head.appendChild(style);
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('Initializing Firebase Auth system...');
   window.authSystem = new FirebaseAuth();
+
+  // Force show login prompt initially if no user is logged in
+  setTimeout(() => {
+    if (!window.authSystem.currentUser) {
+      console.log('No current user - showing login prompt');
+      window.authSystem.showLoginPrompt();
+    }
+  }, 1500);
 });
 
 export { FirebaseAuth };
