@@ -12,11 +12,13 @@ const firebaseConfig = {
 // Initialize Firebase
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteField, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 const analytics = getAnalytics(app);
 
 // Track app usage
@@ -263,5 +265,6 @@ class DatabaseService {
 // Export for use in other files
 window.DatabaseService = DatabaseService;
 window.dbService = new DatabaseService();
+window.firebaseAuth = auth;
 
-export { DatabaseService, db };
+export { DatabaseService, db, auth };

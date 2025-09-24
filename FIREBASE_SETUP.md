@@ -11,14 +11,22 @@ To enable cross-device data sync, you need to set up Firebase:
 4. Enable Google Analytics (optional)
 5. Click "Create project"
 
-### 2. Enable Firestore Database
+### 2. Enable Authentication
+1. In your Firebase project, go to **"Authentication"**
+2. Click **"Get started"**
+3. Go to **"Sign-in method"** tab
+4. Click **"Email/Password"**
+5. **Enable** the first option (Email/Password)
+6. Click **"Save"**
+
+### 3. Enable Firestore Database
 1. In your Firebase project, go to "Firestore Database"
 2. Click "Create database"
 3. Choose "Start in production mode"
 4. Select your region
 5. Click "Done"
 
-### 3. Set Firestore Rules
+### 4. Set Firestore Rules
 Go to "Firestore Database" > "Rules" and replace with:
 
 ```javascript
@@ -36,14 +44,14 @@ service cloud.firestore {
 
 **Note**: These rules allow public access for development. In production, implement proper authentication rules.
 
-### 4. Get Firebase Config
+### 5. Get Firebase Config
 1. Go to Project Settings (⚙️ icon)
 2. Scroll down to "Your apps"
 3. Click "Web" icon (</>) to add web app
 4. Register app name: "action:Track"
 5. Copy the config object
 
-### 5. Update Configuration
+### 6. Update Configuration
 Replace the config in `js/firebase-config.js`:
 
 ```javascript
@@ -57,7 +65,7 @@ const firebaseConfig = {
 };
 ```
 
-### 6. Deploy to Vercel
+### 7. Deploy to Vercel
 1. Push code to GitHub
 2. Import repository in Vercel
 3. Your app will work with cross-device sync!
