@@ -692,105 +692,6 @@
   width: 100%;
 }
 
-/* Auth Modal Styles - Preserving existing functionality */
-.auth-modal {
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.8);
-  overflow: auto;
-}
-
-.auth-modal-content {
-  background-color: #fff;
-  margin: 5% auto;
-  padding: 0;
-  border: 1px solid #000;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
-}
-
-.auth-modal-header {
-  border-bottom: 1px solid #000;
-  padding: 20px;
-  position: relative;
-}
-
-.auth-modal-header h2 {
-  margin: 0;
-  font-family: Ppneuemontrealmono, Arial, sans-serif;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.close {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #000;
-}
-
-.close:hover {
-  color: #666;
-}
-
-.auth-form {
-  padding: 20px;
-}
-
-.input-wrapper {
-  margin-bottom: 15px;
-}
-
-.auth-switch {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.auth-switch span {
-  font-family: Ppneuemontrealmono, Arial, sans-serif;
-  font-size: 14px;
-}
-
-/* Option selection styles */
-.option.selected {
-  background-color: #000;
-  color: #fff;
-}
-
-.option:hover {
-  background-color: #f0f0f0;
-}
-
-.option.selected:hover {
-  background-color: #333;
-}
-
-/* Touch-friendly styles for mobile */
-.touch-friendly {
-  cursor: pointer;
-  min-height: 44px;
-  min-width: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Mobile-specific table scrolling */
-.mobile-scroll-container {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
 @media screen and (max-width: 767px) {
   .wrapper.heading {
     height: 60px;
@@ -967,30 +868,13 @@
 
   .table_instance {
     align-self: stretch;
-    overflow: auto;
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
+    overflow: scroll;
   }
 
   .div-block-4 {
     flex-flow: column;
     justify-content: space-between;
     display: flex;
-  }
-
-  /* Auth modal responsive */
-  .auth-modal-content {
-    width: 95%;
-    margin: 10% auto;
-  }
-
-  .auth-modal-header {
-    padding: 15px;
-  }
-
-  .auth-form {
-    padding: 15px;
   }
 }
 
@@ -1024,4 +908,139 @@
   #w-node-ce142790-9100-a60d-10f3-b92ec46c9bf7-1d70d409 {
     grid-area: span 1 / span 1 / span 1 / span 1;
   }
+}
+
+
+@font-face {
+  font-family: 'Ppneuemontrealmono';
+  src: url('../fonts/PPNeueMontrealMono-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppneuemontrealmono';
+  src: url('../fonts/PPNeueMontrealMono-RegularItalic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppneuemontrealmono';
+  src: url('../fonts/PPNeueMontrealMono-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppeditorialnew';
+  src: url('../fonts/PPEditorialNew-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppneuemontrealmono';
+  src: url('../fonts/PPNeueMontrealMono-ThinItalic.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppneuemontrealmono';
+  src: url('../fonts/PPNeueMontrealMono-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppneuemontrealmono';
+  src: url('../fonts/PPNeueMontrealMono-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppneuemontrealmono Book';
+  src: url('../fonts/PPNeueMontrealMono-Book.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppneuemontrealmono';
+  src: url('../fonts/PPNeueMontrealMono-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppeditorialnew';
+  src: url('../fonts/PPEditorialNew-Ultralight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppneuemontrealmono';
+  src: url('../fonts/PPNeueMontrealMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppeditorialnew';
+  src: url('../fonts/PPEditorialNew-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppeditorialnew';
+  src: url('../fonts/PPEditorialNew-ThinItalic.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppeditorialnew';
+  src: url('../fonts/PPEditorialNew-UltralightItalic.ttf') format('truetype');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppeditorialnew';
+  src: url('../fonts/PPEditorialNew-HeavyItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppeditorialnew';
+  src: url('../fonts/PPEditorialNew-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppeditorialnew';
+  src: url('../fonts/PPEditorialNew-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppeditorialnew';
+  src: url('../fonts/PPEditorialNew-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Ppeditorialnew';
+  src: url('../fonts/PPEditorialNew-Heavy.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
 }
