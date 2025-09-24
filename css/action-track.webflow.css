@@ -671,6 +671,18 @@
   font-size: 12px;
 }
 
+/* Additional animations for offline indicators */
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -100px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
 .radio-button-2 {
   display: block;
 }

@@ -93,24 +93,120 @@ class SubscriptionApp {
     }
   }
 
-  loadUserData(userId) {
+  async loadUserData(userId) {
     this.currentUser = userId;
 
-    // Load user-specific data
-    this.subscriptions = window.authSystem?.getUserData('subscriptions') || [];
-    this.monthlyIncome = parseFloat(window.authSystem?.getUserData('monthlyIncome')) || 0;
+    try {
+      // Load user-specific data from Firebase
+      if (window.dbService) {
+        const subscriptionsResult = await window.dbService.getUserSubscriptions(userId);
+        const incomeResult = await window.dbService.getMonthlyIncome(userId);
 
-    this.loadMonthlyIncome();
-    this.loadSubscriptions();
-    this.updateCalculations();
-    this.setDefaultSelections();
+        this.subscriptions = subscriptionsResult.success ? subscriptionsResult.data : [];
+        this.monthlyIncome = incomeResult.success ? incomeResult.data : 0;
+
+        // Show offline indicator if data came from cache
+        if (subscriptionsResult.offline || incomeResult.offline) {
+          this.showOfflineIndicator();
+        }
+      } else {
+        // Fallback to localStorage if Firebase isn't available
+        this.subscriptions = JSON.parse(localStorage.getItem(`user_${userId}_subscriptions`) || '[]');
+        this.monthlyIncome = parseFloat(localStorage.getItem(`user_${userId}_monthlyIncome`) || '0');
+      }
+
+      this.loadMonthlyIncome();
+      this.loadSubscriptions();
+      this.updateCalculations();
+      this.setDefaultSelections();
+
+    } catch (error) {
+      console.error('Error loading user data:', error);
+      this.showError('Error loading your data. Please try refreshing the page.');
+    }
   }
 
-  saveUserData() {
+  async saveUserData() {
     if (!this.currentUser) return;
 
-    window.authSystem?.setUserData('subscriptions', this.subscriptions);
-    window.authSystem?.setUserData('monthlyIncome', this.monthlyIncome);
+    try {
+      if (window.dbService) {
+        // Save to Firebase
+        const subscriptionsResult = await window.dbService.saveUserSubscriptions(this.currentUser, this.subscriptions);
+        const incomeResult = await window.dbService.saveMonthlyIncome(this.currentUser, this.monthlyIncome);
+
+        // Show offline indicator if saved locally
+        if (subscriptionsResult.offline || incomeResult.offline) {
+          this.showOfflineIndicator();
+        } else {
+          this.hideOfflineIndicator();
+        }
+
+        // Also save locally as backup
+        localStorage.setItem(`user_${this.currentUser}_subscriptions`, JSON.stringify(this.subscriptions));
+        localStorage.setItem(`user_${this.currentUser}_monthlyIncome`, this.monthlyIncome.toString());
+
+      } else {
+        // Fallback to localStorage only
+        localStorage.setItem(`user_${this.currentUser}_subscriptions`, JSON.stringify(this.subscriptions));
+        localStorage.setItem(`user_${this.currentUser}_monthlyIncome`, this.monthlyIncome.toString());
+      }
+    } catch (error) {
+      console.error('Error saving user data:', error);
+      this.showError('Error saving your data. Changes have been saved locally.');
+    }
+  }
+
+  showOfflineIndicator() {
+    let indicator = document.getElementById('offline-indicator');
+    if (!indicator) {
+      indicator = document.createElement('div');
+      indicator.id = 'offline-indicator';
+      indicator.style.cssText = `
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #ff9800;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-family: Ppneuemontrealmono, Arial, sans-serif;
+        font-size: 11px;
+        z-index: 1001;
+        animation: slideDown 0.3s ease;
+      `;
+      indicator.textContent = '📱 Working Offline - Changes will sync when online';
+      document.body.appendChild(indicator);
+    }
+  }
+
+  hideOfflineIndicator() {
+    const indicator = document.getElementById('offline-indicator');
+    if (indicator) {
+      indicator.remove();
+    }
+  }
+
+  showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #f44336;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 5px;
+      font-family: Ppneuemontrealmono, Arial, sans-serif;
+      font-size: 12px;
+      z-index: 1001;
+      animation: slideInRight 0.3s ease;
+    `;
+    errorDiv.textContent = message;
+
+    document.body.appendChild(errorDiv);
+    setTimeout(() => errorDiv.remove(), 4000);
   }
 
   addSubscription() {
