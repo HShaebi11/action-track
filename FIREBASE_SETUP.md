@@ -25,17 +25,16 @@ Go to "Firestore Database" > "Rules" and replace with:
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can read/write their own data
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-
-    match /userData/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+    // Allow public read/write for now (development only)
+    // In production, implement proper authentication rules
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }
 ```
+
+**Note**: These rules allow public access for development. In production, implement proper authentication rules.
 
 ### 4. Get Firebase Config
 1. Go to Project Settings (⚙️ icon)

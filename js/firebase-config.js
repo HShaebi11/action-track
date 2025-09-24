@@ -1,21 +1,33 @@
 // Firebase Configuration
-// Replace with your actual Firebase config
 const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "your-sender-id",
-  appId: "your-app-id"
+  apiKey: "AIzaSyCuySIEoHmDAbw7yIRG50bI2nKEsddOxs4",
+  authDomain: "track-byhamza-xyz.firebaseapp.com",
+  projectId: "track-byhamza-xyz",
+  storageBucket: "track-byhamza-xyz.firebasestorage.app",
+  messagingSenderId: "524511488998",
+  appId: "1:524511488998:web:6574f0ce061665c4990427",
+  measurementId: "G-LMSGD3NC19"
 };
 
 // Initialize Firebase
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteField, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const analytics = getAnalytics(app);
+
+// Track app usage
+try {
+  // Track page views and user interactions
+  if (analytics) {
+    console.log('Firebase Analytics initialized successfully');
+  }
+} catch (error) {
+  console.log('Analytics not available:', error);
+}
 
 // Database Service Class
 class DatabaseService {
@@ -45,6 +57,16 @@ class DatabaseService {
         createdAt: new Date().toISOString(),
         lastLogin: new Date().toISOString()
       });
+
+      // Track user registration
+      try {
+        logEvent(analytics, 'sign_up', {
+          method: 'passkey'
+        });
+      } catch (e) {
+        console.log('Analytics not available');
+      }
+
       return { success: true };
     } catch (error) {
       console.error('Error creating user:', error);
@@ -90,6 +112,16 @@ class DatabaseService {
         subscriptions: subscriptions,
         lastUpdated: new Date().toISOString()
       }, { merge: true });
+
+      // Track subscription actions
+      try {
+        logEvent(analytics, 'subscription_updated', {
+          total_subscriptions: subscriptions.length,
+          user_id: userId
+        });
+      } catch (e) {
+        console.log('Analytics not available');
+      }
 
       return { success: true };
     } catch (error) {
