@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>action:Track - Design Comparison</title>
+  <style>
+    body {
+      font-family: 'Ppneuemontrealmono', monospace;
+      margin: 0;
+      padding: 20px;
+      background: #f8f9fa;
+      color: #333;
+    }
+
+    .comparison-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .comparison-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .comparison-header h1 {
+      font-size: 32px;
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    .comparison-header p {
+      font-size: 14px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .version-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .version-header {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .version-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .version-description {
+      font-size: 12px;
+      color: #666;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      line-height: 1.4;
+    }
+
+    .preview-frame {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .features-list {
+      margin-top: 20px;
+    }
+
+    .features-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .feature-item {
+      font-size: 11px;
+      margin: 6px 0;
+      padding-left: 12px;
+      position: relative;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .feature-item:before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: #4CAF50;
+      font-weight: bold;
+    }
+
+    .cta-section {
+      background: #000;
+      color: white;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .cta-title {
+      font-size: 24px;
+      margin: 0 0 16px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cta-description {
+      font-size: 14px;
+      margin: 0 0 24px 0;
+      opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 12px 24px;
+      background: white;
+      color: #000;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: all 0.3s ease;
+      border: 1px solid white;
+    }
+
+    .cta-button:hover {
+      background: transparent;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .cta-button.secondary {
+      background: transparent;
+      color: white;
+    }
+
+    .cta-button.secondary:hover {
+      background: white;
+      color: #000;
+    }
+
+    @media (max-width: 768px) {
+      .comparison-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .preview-frame {
+        height: 400px;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .cta-button {
+        width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="comparison-container">
+    <div class="comparison-header">
+      <h1>action:Track Design Evolution</h1>
+      <p>Original vs. Redesigned - Choose Your Experience</p>
+    </div>
+
+    <div class="comparison-grid">
+      <!-- Original Version -->
+      <div class="version-section">
+        <div class="version-header">
+          <h2 class="version-title">Original Design</h2>
+          <p class="version-description">
+            The current implementation with basic functionality and inconsistent styling
+          </p>
+        </div>
+
+        <iframe src="index.html" class="preview-frame" title="Original Design"></iframe>
+
+        <div class="features-list">
+          <div class="features-title">Current Features:</div>
+          <div class="feature-item">Basic subscription tracking</div>
+          <div class="feature-item">Firebase authentication</div>
+          <div class="feature-item">Minimal GSAP animations</div>
+          <div class="feature-item">Mobile responsive layout</div>
+          <div class="feature-item">Browser compatibility fixes</div>
+          <div class="feature-item">Offline data storage</div>
+        </div>
+      </div>
+
+      <!-- Redesigned Version -->
+      <div class="version-section">
+        <div class="version-header">
+          <h2 class="version-title">Redesigned Version</h2>
+          <p class="version-description">
+            Modern, consistent design system with enhanced UX and improved interactions
+          </p>
+        </div>
+
+        <iframe src="index-redesigned.html" class="preview-frame" title="Redesigned Version"></iframe>
+
+        <div class="features-list">
+          <div class="features-title">Enhanced Features:</div>
+          <div class="feature-item">Consistent design system</div>
+          <div class="feature-item">CSS custom properties (variables)</div>
+          <div class="feature-item">Modern card-based layout</div>
+          <div class="feature-item">Enhanced animations & micro-interactions</div>
+          <div class="feature-item">Improved form validation</div>
+          <div class="feature-item">Better mobile experience</div>
+          <div class="feature-item">Keyboard shortcuts support</div>
+          <div class="feature-item">Loading states & skeleton UI</div>
+          <div class="feature-item">Priority badges & visual indicators</div>
+          <div class="feature-item">Dark mode support</div>
+          <div class="feature-item">Accessibility improvements</div>
+          <div class="feature-item">Better error handling</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="cta-section">
+      <h2 class="cta-title">Ready to Upgrade?</h2>
+      <p class="cta-description">
+        Experience the enhanced design system with consistent styling and improved user experience
+      </p>
+      <div class="cta-buttons">
+        <a href="index-redesigned.html" class="cta-button">Try Redesigned Version</a>
+        <a href="index.html" class="cta-button secondary">Keep Original</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
